@@ -105,7 +105,8 @@ Array
 ```
 
 ## TODO:
-- [] Remove modify INI_DIR step from installation
-- [] [Use custom exceptions instead of \Exception](https://github.com/CopernicaMarketingSoftware/PHP-CPP/issues/315)
-- [] Generate PHP classes in the extension and convert the AST to PHP classes instead of array
-- [] Generate PHP stubs for AST that can be used by IDEs
+- [ ] Remove modify INI_DIR step from installation
+- [ ] [Use custom exceptions instead of \Exception](https://github.com/CopernicaMarketingSoftware/PHP-CPP/issues/315)
+- [ ] Generate PHP classes in the extension and convert the AST to PHP classes instead of array
+- [x] Generate PHP stubs for AST that can be used by IDEs
+- [ ] Create build script to fetch latest ast.ast from libgraphqlparser
