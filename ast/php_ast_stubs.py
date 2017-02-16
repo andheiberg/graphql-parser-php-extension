@@ -24,7 +24,7 @@ class Printer(object):
     base = self._base_class(name)
     print >> self._file, '''<?php
 
-namespace Facebook\GraphQL\AST;
+namespace AndHeiberg\GraphQL\Parser\AST;
 '''
     print >> self._file, 'class %s extends %s' % (name, base)
     print >> self._file, '{'
@@ -143,7 +143,7 @@ namespace Facebook\GraphQL\AST;
   def start_union(self, name):
     print >> self._file, '''<?php
 
-namespace Facebook\GraphQL\AST;
+namespace AndHeiberg\GraphQL\Parser\AST;
 '''
 
     self._type_name = name
@@ -164,6 +164,6 @@ namespace Facebook\GraphQL\AST;
 
   def write_to_file(self):
     if self._type_name:
-      file = open('php_stubs/' + self._type_name + '.php', 'w')
+      file = open('php_ast_stubs/' + self._type_name + '.php', 'w')
       file.write(self._file.getvalue())
       self._file = StringIO.StringIO()

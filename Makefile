@@ -45,7 +45,7 @@ ${OBJECTS}:
 ast.ast:
 	if [ ! -f ${AST} ]; then wget -O ${AST} ${AST_SOURCE}; fi
 	# cd ast && python ast.py php ast.ast
-	cd ast && python ast.py php_stubs ast.ast
+	cd ast && python ast.py php_ast_stubs ast.ast
 
 install:		
 	cp -f ${EXTENSION} ${EXTENSION_DIR}
