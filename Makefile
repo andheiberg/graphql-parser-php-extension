@@ -26,7 +26,7 @@ LINKER_DEPENDENCIES	=	-lphpcpp
 #	file, with the .cpp extension being replaced by .o.
 #
 
-SOURCES				=	$(wildcard *.cpp)
+SOURCES				=	$(wildcard src/*.cpp)
 OBJECTS				=	$(SOURCES:%.cpp=%.o)
 
 AST 				= ast/ast.ast
