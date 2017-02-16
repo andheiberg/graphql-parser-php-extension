@@ -1,7 +1,5 @@
 import cStringIO as StringIO
 
-from casing import title
-
 class Printer(object):
   def __init__(self):
     self._type_name = None
@@ -133,7 +131,7 @@ namespace Facebook\GraphQL\AST;
   def print_getters(self):
     for idx, (type, name, nullable, plural) in enumerate(self._fields):
       print >> self._file, '  public function get%s(): %s' % (
-        title(name),
+        name.title(),
         self._getter_type(type, nullable, plural))
       print >> self._file, '  {'
       print >> self._file, '    return %s;' % (
@@ -166,6 +164,6 @@ namespace Facebook\GraphQL\AST;
 
   def write_to_file(self):
     if self._type_name:
-      file = open('php/' + self._type_name + '.php', 'w')
+      file = open('php_stubs/' + self._type_name + '.php', 'w')
       file.write(self._file.getvalue())
       self._file = StringIO.StringIO()

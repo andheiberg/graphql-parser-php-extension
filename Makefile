@@ -29,6 +29,10 @@ LINKER_DEPENDENCIES	=	-lphpcpp
 SOURCES				=	$(wildcard *.cpp)
 OBJECTS				=	$(SOURCES:%.cpp=%.o)
 
+AST 				= ast/ast.ast
+AST_SOURCE 			= https://raw.githubusercontent.com/graphql/libgraphqlparser/master/ast/ast.ast
+AST_PHP             = $(wildcard ast/php/*.cpp)
+AST_PHP_STUBS       = $(wildcard ast/php_stubs/*.php)
 
 all: ${EXTENSION}
 
@@ -38,9 +42,16 @@ ${EXTENSION}: ${OBJECTS}
 ${OBJECTS}:
 	${COMPILER} ${COMPILER_FLAGS} $@ ${@:%.o=%.cpp}
 
+ast.ast:
+	if [ ! -f ${AST} ]; then wget -O ${AST} ${AST_SOURCE}; fi
+	# cd ast && python ast.py php ast.ast
+	cd ast && python ast.py php_stubs ast.ast
+
 install:		
 	cp -f ${EXTENSION} ${EXTENSION_DIR}
+	cp -f ${INI} ${INI_DIR}
 				
 clean:
 	rm -f ${EXTENSION} ${OBJECTS}
+	rm -f ${AST} ${AST_PHP_STUBS}
 

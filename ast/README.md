@@ -11,5 +11,5 @@ I will write a build script that fetches this directly from the libgraphqlparser
 
 ```
 python ast.py php ast.ast
-python ast.py php_stub ast.ast
+python ast.py php_stubs ast.ast
 ```
