@@ -1,4 +1,4 @@
-/main.o
-/graphql-parser.so
+*.o
+*.so
 __pycache__
 *.pyc
