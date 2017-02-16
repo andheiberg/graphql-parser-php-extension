@@ -1,5 +1,6 @@
 #include <phpcpp.h>
 #include "Parser.cpp"
+#include "Node.cpp"
 
 /**
  *  tell the compiler that the get_module is a pure C function
@@ -20,6 +21,7 @@ extern "C" {
         static Php::Extension extension("graphql-parser", "0.1.0");
 
         #include "Parser.php.inc"
+        #include "Node.php.inc"
 
         // return the extension
         return extension;
