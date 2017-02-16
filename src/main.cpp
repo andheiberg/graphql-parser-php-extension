@@ -19,16 +19,7 @@ extern "C" {
         // for the entire duration of the process (that's why it's static)
         static Php::Extension extension("graphql-parser", "0.1.0");
 
-        // we are going to define a class
-        Php::Class<Parser> parser("AndHeiberg\\GraphQL\\Parser\\Parser");
-
-        // add methods to it
-        parser.method<&Parser::parse> ("parse", {
-            Php::ByVal("input", Php::Type::String)
-        });
-
-        // add it to the extension
-        extension.add(std::move(parser));
+        #include "Parser.php.inc"
 
         // return the extension
         return extension;
