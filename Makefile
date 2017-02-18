@@ -31,10 +31,14 @@ OBJECTS				=	$(SOURCES:%.cpp=%.o)
 
 AST 				= ast/ast.ast
 AST_SOURCE 			= https://raw.githubusercontent.com/graphql/libgraphqlparser/master/ast/ast.ast
-AST_PHP             = $(wildcard ast/php/*.cpp)
-AST_PHP_STUBS       = $(wildcard ast/php_stubs/*.php)
+AST_CPP_AST         = generated/ast.cpp
+AST_CPP_AST_INC     = generated/ast.php.inc
+AST_PHP_AST_STUBS   = $(wildcard generated/php_ast_stubs/*.php)
 
-all: ${EXTENSION}
+# Generated is a sub dir of all the code generated from the ast.ast required to build the PHP extension.
+.PHONY: generated
+
+all: generated ${EXTENSION}
 
 ${EXTENSION}: ${OBJECTS}
 	${LINKER} ${LINKER_FLAGS} -o $@ ${OBJECTS} ${LINKER_DEPENDENCIES}
@@ -42,10 +46,16 @@ ${EXTENSION}: ${OBJECTS}
 ${OBJECTS}:
 	${COMPILER} ${COMPILER_FLAGS} $@ ${@:%.o=%.cpp}
 
-ast.ast:
+generated:
 	if [ ! -f ${AST} ]; then wget -O ${AST} ${AST_SOURCE}; fi
-	# cd ast && python ast.py php ast.ast
-	cd ast && python ast.py php_ast_stubs ast.ast
+	if [ ! -f generated/ast.cpp ]; then \
+		python ast/ast.py cpp_ast ${AST} > ${AST_CPP_AST}; \
+		python ast/ast.py cpp_ast_inc ${AST} > ${AST_CPP_AST_INC}; \
+		python ast/ast.py php_ast_stubs ${AST}; \
+	fi;
+
+clean-ast:
+	rm -f ${AST}
 
 install:		
 	cp -f ${EXTENSION} ${EXTENSION_DIR}
@@ -53,5 +63,5 @@ install:
 				
 clean:
 	rm -f ${EXTENSION} ${OBJECTS}
-	rm -f ${AST} ${AST_PHP_STUBS}
+	rm -f ${AST_CPP_AST} ${AST_CPP_AST_INC} ${AST_PHP_AST_STUBS}
 

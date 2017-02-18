@@ -7,7 +7,6 @@ class Printer(object):
     self._type_name = None
     # Map concrete type to base class
     self._bases = {}
-    self._out = StringIO.StringIO()
     # HACK: Defer everything we print so that forward declarations for
     # all classes come first. Avoids having to do 2 passes over the
     # input file.
@@ -16,15 +15,13 @@ class Printer(object):
     self._fields = []
 
   def start_file(self):
-    print >> self._out, '''/** @generated */
+    print '''/** @generated */
 
 #include "../src/Node.cpp"
 '''
 
   def end_file(self):
-    print >> self._out, self._defOut.getvalue()
-    file = open('generated/ast.cpp', 'w')
-    file.write(self._out.getvalue())
+    print self._defOut.getvalue()
 
   def _base_class(self, type):
     return self._bases.get(type, 'Node')
@@ -33,7 +30,7 @@ class Printer(object):
     self._type_name = name
     base = self._base_class(name)
     # non-deferred!
-    print >> self._out, 'class %s;' % name
+    print 'class %s;' % name
     print >> self._defOut, 'class %s : public %s {' % (name, base)
     self._fields = []
 
@@ -99,7 +96,7 @@ class Printer(object):
   def start_union(self, name):
     self._type_name = name
     # non-deferred!
-    print >> self._out, 'class %s;' % name
+    print 'class %s;' % name
 
     print >> self._defOut, 'class %s : public Node {' % name
     print >> self._defOut, ' public:'

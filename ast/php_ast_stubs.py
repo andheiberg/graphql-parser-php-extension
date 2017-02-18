@@ -164,6 +164,6 @@ namespace AndHeiberg\GraphQL\Parser\AST;
 
   def write_to_file(self):
     if self._type_name:
-      file = open('/generated/php_ast_stubs/' + self._type_name + '.php', 'w')
+      file = open('generated/php_ast_stubs/' + self._type_name + '.php', 'w')
       file.write(self._file.getvalue())
       self._file = StringIO.StringIO()
