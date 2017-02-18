@@ -1,6 +1,7 @@
 #include <phpcpp.h>
 #include "Parser.cpp"
 #include "Node.cpp"
+#include "../generated/ast.cpp"
 
 /**
  *  tell the compiler that the get_module is a pure C function

@@ -1,4 +1,4 @@
-// // Position PHP class
+// Position PHP class
 Php::Class<Position> position("AndHeiberg\\GraphQL\\Parser\\AST\\Position");
 
 position.method<&Position::__construct> ("__construct", {

@@ -128,4 +128,9 @@ public:
     {
         return _location;
     }
+
+    void setLocation(Php::Value l)
+    {
+        _location = l;
+    }
 };
