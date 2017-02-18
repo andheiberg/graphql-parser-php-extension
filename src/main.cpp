@@ -23,6 +23,7 @@ extern "C" {
 
         #include "Parser.php.inc"
         #include "Node.php.inc"
+        #include "../generated/ast.php.inc"
 
         // return the extension
         return extension;
