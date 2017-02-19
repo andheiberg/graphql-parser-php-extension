@@ -17,6 +17,8 @@ class Printer(object):
   def start_file(self):
     print '''/** @generated */
 
+#pragma once
+
 #include "../src/Node.cpp"
 '''
 
@@ -77,17 +79,9 @@ class Printer(object):
 
     print >> self._defOut, '  }'
 
-  def _getter_type(self, type, nullable, plural):
-    if plural:
-      return 'Php::Array'
-
-    return 'Php::Value'
-
   def _print_getters(self):
     for (type, name, nullable, plural) in self._fields:
-      print >> self._defOut, '  %s get%s() const' % (
-        self._getter_type(type, nullable, plural),
-        name.title())
+      print >> self._defOut, '  Php::Value get%s() const' % (self.upperFirst(name))
       print >> self._defOut, '  {'
       print >> self._defOut, '    return %s;' % ('_' + name)
       print >> self._defOut, '  }'
@@ -111,3 +105,6 @@ class Printer(object):
 
   def end_union(self, name):
     pass
+
+  def upperFirst(self, s):
+    return s[:1].upper() + s[1:] if s else ''
