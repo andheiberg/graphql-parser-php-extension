@@ -33,6 +33,7 @@ AST 				= ast/ast.ast
 AST_SOURCE 			= https://raw.githubusercontent.com/graphql/libgraphqlparser/master/ast/ast.ast
 AST_CPP_AST         = generated/ast.cpp
 AST_CPP_AST_INC     = generated/ast.php.inc
+AST_CPP_AST_TO_PHP_VISITOR = generated/ASTToPHPVisitor.cpp
 AST_PHP_AST_STUBS   = $(wildcard generated/php_ast_stubs/*.php)
 
 # Generated is a sub dir of all the code generated from the ast.ast required to build the PHP extension.
@@ -51,6 +52,7 @@ generated:
 	if [ ! -f generated/ast.cpp ]; then \
 		python ast/ast.py cpp_ast ${AST} > ${AST_CPP_AST}; \
 		python ast/ast.py cpp_ast_inc ${AST} > ${AST_CPP_AST_INC}; \
+		python ast/ast.py cpp_ast_to_php_visitor ${AST} > ${AST_CPP_AST_TO_PHP_VISITOR}; \
 		python ast/ast.py php_ast_stubs ${AST}; \
 	fi;
 

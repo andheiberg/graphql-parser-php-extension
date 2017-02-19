@@ -2,7 +2,9 @@
 #include <graphqlparser/c/GraphQLAst.h>
 #include <graphqlparser/c/GraphQLAstNode.h>
 #include <graphqlparser/c/GraphQLParser.h>
-#include <graphqlparser/c/GraphQLAstToJSON.h>
+#include <graphqlparser/JsonVisitor.h>
+#include <graphqlparser/AstNode.h>
+#include "../generated/ASTToPHPVisitor.cpp"
 
 class Parser : public Php::Base
 {
@@ -17,7 +19,6 @@ public:
     {
         struct GraphQLAstNode *ast;
         const char *error;
-        char *json;
 
         ast = graphql_parse_string(params[0], &error);
 
@@ -26,10 +27,10 @@ public:
             throw Php::Exception(error);
         }
 
-        json = (char *) graphql_ast_to_json(ast);
-
-        Php::Value result = Php::call("json_decode", json, true);
-
+        ASTToPHPVisitor visitor;
+        ((facebook::graphql::ast::Node *) ast)->accept(&visitor);
+        Php::Value result = visitor.getResult();
+        
         graphql_node_free(ast);
 
         return result;
