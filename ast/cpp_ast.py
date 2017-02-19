@@ -73,7 +73,7 @@ class Printer(object):
     print >> self._defOut, '    setLocation(params[0]);'
 
     print >> self._defOut, '\n'.join(
-      '    _%s = params[%i];' % (name, idx + 1)
+      "    if (params[%i]) {\n      _%s = params[%i];\n    }" % (idx + 1, name, idx + 1) if nullable else '    _%s = params[%i];' % (name, idx + 1)
       for idx, (type, name, nullable, plural) in enumerate(self._fields)
     )
 

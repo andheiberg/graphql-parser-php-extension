@@ -50,7 +50,19 @@ class Printer(object):
       fields_str += ', {'
 
     for (type, name, nullable, plural) in self._fields:
-        fields_str += '\n  Php::ByVal("%s", %s),' % (name, self._get_byval_type(type))
+      if type in ['string', 'boolean']:
+        fields_str += '\n  Php::ByVal("%s", %s, %s),' % (
+          name,
+          self._get_byval_type(type),
+          "false" if nullable else "true",
+        )
+      else:
+        fields_str += '\n  Php::ByVal("%s", %s, %s, %s),' % (
+          name,
+          self._get_byval_type(type),
+          "true" if nullable else "false",
+          "false" if nullable else "true"
+        )
 
     if len(self._fields):
       fields_str += '\n}'
