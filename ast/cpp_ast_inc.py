@@ -15,6 +15,9 @@ class Printer(object):
   def end_file(self):
     pass
 
+  def _base_class(self, type):
+    return self._bases.get(type, 'Node')
+
   def start_type(self, name):
     self._type_name = name
     self._fields = []
@@ -32,6 +35,8 @@ class Printer(object):
     self._print_constructor()
     print
     self._print_getters()
+    print
+    print '%s.extends(%s);' % (self.lowerFirst(name), self.lowerFirst(self._base_class(name)))
     print
     print 'extension.add(std::move(%s));' % (self.lowerFirst(name))
     print
@@ -78,6 +83,8 @@ class Printer(object):
   def end_union(self, name):
     print "// %s PHP class" % (name)
     print 'Php::Class<%s> %s("AndHeiberg\\\\GraphQL\\\\Parser\\\\AST\\\\%s");' % (name, self.lowerFirst(name), name)
+    print
+    print '%s.extends(%s);' % (self.lowerFirst(name), self.lowerFirst(self._base_class(name)))
     print
     print 'extension.add(std::move(%s));' % (self.lowerFirst(name))
     print
