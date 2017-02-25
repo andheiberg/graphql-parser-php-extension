@@ -16,7 +16,7 @@ COMPILER_FLAGS		=	-Wall -c -O2 -std=c++11 -fpic -o
 LINKER_FLAGS		=	-shared -undefined dynamic_lookup
 # If your extension depends on other libraries, you should update this with a list
 # of all flags that should be passed to the linker.
-LINKER_DEPENDENCIES	=	-lphpcpp
+LINKER_DEPENDENCIES	=	-lphpcpp -lgraphqlparser
 
 #
 #	All source files are simply all *.cpp files found in the current directory
