@@ -29,6 +29,7 @@ class Printer(object):
 #include <phpcpp.h>
 #include "../src/Node.cpp"
 #include "ast.cpp"
+#include <vector>
 
 class ASTToPHPVisitor : public facebook::graphql::ast::visitor::AstVisitor {
 private:
@@ -52,7 +53,7 @@ private:
     );
   }
 """ % ("\n  ").join(
-    "Php::Array _%ss;" % (self.lowerFirst(type)) for type in self._types
+    "std::vector<Php::Object> _%ss;" % (self.lowerFirst(type)) for type in self._types
   )
     print self._defOut.getvalue()
     print """public:
@@ -60,7 +61,7 @@ private:
   ~ASTToPHPVisitor() = default;
 
   Php::Value getResult() const {
-    return _documents[0]; 
+    return _documents.back(); 
   }
 };
 """
@@ -81,9 +82,9 @@ private:
     if type in ['string', 'boolean']:
         return "node.get%s()" % (self.upperFirst(fieldName))
     if not plural:
-      return "_%ss.contains(0) ? _%ss[0] : Php::Value()" % (bucket, bucket)
+      return "  ! _%ss.empty() ? _%ss.back() : Php::Value()"% (bucket, bucket)
     else:
-      return "_%s" % (bucket)
+      return "  ! _%s.empty() ? Php::Array(_%s) : Php::Array()"% (bucket, bucket)
 
   def _reset_field(self, type, fieldName, nullable, plural):
     bucket = self._bases.get(fieldName, fieldName)
@@ -91,9 +92,11 @@ private:
     if type in ['string', 'boolean']:
         return ""
     if not plural:
-      return "_%ss = Php::Array();" % (bucket)
+      return """if (! _%ss.empty()) {
+      _%ss.pop_back();
+    }""" % (bucket, bucket)
     else:
-      return "_%s = Php::Array();" % (bucket)
+      return "_%s.clear();" % (bucket)
 
   def end_type(self, name):
     print >> self._defOut, """  bool visit%(tn)s(const facebook::graphql::ast::%(tn)s &node) {
@@ -101,9 +104,11 @@ private:
   }
 
   void endVisit%(tn)s(const facebook::graphql::ast::%(tn)s &node) {
-    _%(bucket)ss[_%(bucket)ss.count()] = Php::Object(
-      "AndHeiberg\\\\GraphQL\\\\Parser\\\\AST\\\\%(tn)s",
-      getLocation(node)%(fcomma)s%(fields)s
+    _%(bucket)ss.push_back(
+      Php::Object(
+        "AndHeiberg\\\\GraphQL\\\\Parser\\\\AST\\\\%(tn)s",
+        getLocation(node)%(fcomma)s%(fields)s
+      )
     );
 
     %(reset)s
