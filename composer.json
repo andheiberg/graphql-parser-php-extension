@@ -1,0 +1,22 @@
+{
+  "name": "andheiberg/graphql-php-parser-tests",
+  "description": "Tests for GraphQL PHP parser extension",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andreas Heiberg",
+      "email": "andreas@heiberg.io"
+    }
+  ],
+  "require": {
+    "php": ">=7.0,<8.0-DEV"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8"
+  },
+  "autoload-dev": {
+    "classmap": [
+      "Tests/"
+    ]
+  }
+}
