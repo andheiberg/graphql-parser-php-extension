@@ -6,6 +6,7 @@ PHP Extension for Parsing GraphQL Query Language and GraphQL Schema Language. Ba
 
 - PHP 7+ (`brew install php70` or `brew install php71`)
 - [libgraphqlparser](https://github.com/graphql/libgraphqlparser) (`brew install libgraphqlparser`)
+- [PHP-CPP](http://www.php-cpp.com/documentation/install)
 
 ## Installation
 
