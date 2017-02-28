@@ -44,7 +44,7 @@ class FragmentDefinition extends Definition
     return $this->name;
   }
 
-  public function getTypecondition(): NamedType
+  public function getTypeCondition(): NamedType
   {
     return $this->typeCondition;
   }
@@ -54,7 +54,7 @@ class FragmentDefinition extends Definition
     return $this->directives;
   }
 
-  public function getSelectionset(): SelectionSet
+  public function getSelectionSet(): SelectionSet
   {
     return $this->selectionSet;
   }

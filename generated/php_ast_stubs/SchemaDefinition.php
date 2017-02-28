@@ -30,7 +30,7 @@ class SchemaDefinition extends Definition
     return $this->directives;
   }
 
-  public function getOperationtypes(): array // OperationTypeDefinition[]
+  public function getOperationTypes(): array // OperationTypeDefinition[]
   {
     return $this->operationTypes;
   }

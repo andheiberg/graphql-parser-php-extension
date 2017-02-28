@@ -56,7 +56,7 @@ class OperationDefinition extends Definition
     return $this->name;
   }
 
-  public function getVariabledefinitions(): ?array // VariableDefinition[]
+  public function getVariableDefinitions(): ?array // VariableDefinition[]
   {
     return $this->variableDefinitions;
   }
@@ -66,7 +66,7 @@ class OperationDefinition extends Definition
     return $this->directives;
   }
 
-  public function getSelectionset(): SelectionSet
+  public function getSelectionSet(): SelectionSet
   {
     return $this->selectionSet;
   }

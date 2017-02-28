@@ -131,7 +131,7 @@ namespace AndHeiberg\GraphQL\Parser\AST;
   def print_getters(self):
     for idx, (type, name, nullable, plural) in enumerate(self._fields):
       print >> self._file, '  public function get%s(): %s' % (
-        name.title(),
+        self.upperFirst(name),
         self._getter_type(type, nullable, plural))
       print >> self._file, '  {'
       print >> self._file, '    return %s;' % (
@@ -161,6 +161,9 @@ namespace AndHeiberg\GraphQL\Parser\AST;
   def end_union(self, name):
     self.write_to_file()
     pass
+
+  def upperFirst(self, s):
+    return s[:1].upper() + s[1:] if s else ''
 
   def write_to_file(self):
     if self._type_name:

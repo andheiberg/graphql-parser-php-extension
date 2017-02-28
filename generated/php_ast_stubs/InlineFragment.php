@@ -32,7 +32,7 @@ class InlineFragment extends Selection
       $this->selectionSet = $selectionSet;
   }
 
-  public function getTypecondition(): ?NamedType
+  public function getTypeCondition(): ?NamedType
   {
     return $this->typeCondition;
   }
@@ -42,7 +42,7 @@ class InlineFragment extends Selection
     return $this->directives;
   }
 
-  public function getSelectionset(): SelectionSet
+  public function getSelectionSet(): SelectionSet
   {
     return $this->selectionSet;
   }

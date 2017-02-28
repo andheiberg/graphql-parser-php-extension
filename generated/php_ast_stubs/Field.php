@@ -66,7 +66,7 @@ class Field extends Selection
     return $this->directives;
   }
 
-  public function getSelectionset(): ?SelectionSet
+  public function getSelectionSet(): ?SelectionSet
   {
     return $this->selectionSet;
   }

@@ -49,7 +49,7 @@ class InputValueDefinition extends Node
     return $this->type;
   }
 
-  public function getDefaultvalue(): ?Value
+  public function getDefaultValue(): ?Value
   {
     return $this->defaultValue;
   }
