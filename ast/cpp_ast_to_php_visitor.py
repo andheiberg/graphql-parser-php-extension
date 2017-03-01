@@ -6,7 +6,6 @@ class Printer(object):
     # Basically if we had 1 values bag we would be required to write logic
     # To split defaultValues from the values bag.
     self._types = [
-      'DefaultValue',
       'Alias',
       'TypeCondition',
       'OperationType',
@@ -79,8 +78,11 @@ private:
   def _print_field(self, type, fieldName, nullable, plural):
     bucket = self._bases.get(fieldName, fieldName)
 
+    if bucket == "defaultValue":
+      bucket = "value"
+
     if type in ['string', 'boolean']:
-        return "node.get%s()" % (self.upperFirst(fieldName))
+      return "node.get%s()" % (self.upperFirst(fieldName))
     if not plural:
       return "  ! _%ss.empty() ? _%ss.back() : Php::Value()"% (bucket, bucket)
     else:
@@ -88,6 +90,9 @@ private:
 
   def _reset_field(self, type, fieldName, nullable, plural):
     bucket = self._bases.get(fieldName, fieldName)
+
+    if bucket == "defaultValue":
+      bucket = "value"
 
     if type in ['string', 'boolean']:
         return ""
@@ -100,33 +105,14 @@ private:
 
   def end_type(self, name):
     print >> self._defOut, """  bool visit%(tn)s(const facebook::graphql::ast::%(tn)s &node) {
+    Php::out << "visit%(tn)s" << std::endl;
     return true;
-  }
-
-  void endVisit%(tn)s(const facebook::graphql::ast::%(tn)s &node) {
-    _%(bucket)ss.push_back(
-      Php::Object(
-        "AndHeiberg\\\\GraphQL\\\\Parser\\\\AST\\\\%(tn)s",
-        getLocation(node)%(fcomma)s%(fields)s
-      )
-    );
-
-    %(reset)s
-  }
-""" % {
-      'n': self.lowerFirst(name),
-      'tn': name,
-      'bucket': self.lowerFirst(self._bases.get(name, name)),
-      'fcomma': ",\n      " if self._fields else '',
-      'fields': ",\n      ".join(
-        self._print_field(type, fieldName, nullable, plural)
-        for type, fieldName, nullable, plural in self._fields
-      ),
-      'reset': "\n    ".join(
-        self._reset_field(type, fieldName, nullable, plural)
-        for type, fieldName, nullable, plural in self._fields
-      )
-    }
+  }""" % { 'tn': name }
+    print >> self._defOut
+    if name == "Variable":
+      print >> self._defOut, self.renderConditionalTypeVisitorEnd(name)
+    else:
+      print >> self._defOut, self.renderTypeVisitorEnd(name)
 
   def start_union(self, name):
     self._type_name = name
@@ -138,6 +124,67 @@ private:
 
   def end_union(self, name):
     pass
+
+  def renderConditionalTypeVisitorEnd(self, name):
+    return """  void endVisit%(tn)s(const facebook::graphql::ast::%(tn)s &node) {
+    Php::out << "endVisit%(tn)s" << std::endl;
+    if (_selectionSets.empty()) {
+      _variables.push_back(
+        Php::Object(
+          "AndHeiberg\\\\GraphQL\\\\Parser\\\\AST\\\\%(tn)s",
+          getLocation(node)%(fcomma)s%(fields)s
+        )
+      );
+    } else {
+      _%(bucket)ss.push_back(
+        Php::Object(
+          "AndHeiberg\\\\GraphQL\\\\Parser\\\\AST\\\\Variable",
+          getLocation(node)%(fcomma)s%(fields)s
+        )
+      );
+    }
+
+    %(reset)s
+  }
+""" % {
+        'tn': name,
+        'bucket': self.lowerFirst(self._bases.get(name, name)),
+        'fcomma': ",\n      " if self._fields else '',
+        'fields': ",\n      ".join(
+          self._print_field(type, fieldName, nullable, plural)
+          for type, fieldName, nullable, plural in self._fields
+        ),
+        'reset': "\n    ".join(
+          self._reset_field(type, fieldName, nullable, plural)
+          for type, fieldName, nullable, plural in self._fields
+        )
+      }
+
+  def renderTypeVisitorEnd(self, name):
+    return """  void endVisit%(tn)s(const facebook::graphql::ast::%(tn)s &node) {
+    Php::out << "endVisit%(tn)s" << std::endl;
+    _%(bucket)ss.push_back(
+      Php::Object(
+        "AndHeiberg\\\\GraphQL\\\\Parser\\\\AST\\\\%(tn)s",
+        getLocation(node)%(fcomma)s%(fields)s
+      )
+    );
+
+    %(reset)s
+  }
+  """ % {
+          'tn': name,
+          'bucket': self.lowerFirst(self._bases.get(name, name)),
+          'fcomma': ",\n      " if self._fields else '',
+          'fields': ",\n      ".join(
+            self._print_field(type, fieldName, nullable, plural)
+            for type, fieldName, nullable, plural in self._fields
+          ),
+          'reset': "\n    ".join(
+            self._reset_field(type, fieldName, nullable, plural)
+            for type, fieldName, nullable, plural in self._fields
+          )
+        }
 
   def lowerFirst(self, s):
     return s[:1].lower() + s[1:] if s else ''
